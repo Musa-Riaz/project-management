@@ -27,6 +27,12 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// export const addComments = async (req: Request, res: Response) : Promise<void> => {
+//   const { taskId } = req.params;
+//   const { content, userId} = req.body;
+
+// }
+
 export const createTask = async (
   req: Request,
   res: Response
@@ -117,3 +123,22 @@ export const getUserTasks = async (req: Request, res: Response): Promise<void> =
       .json({ error: `An error occurred while users tasks.${err.message}` });
   }
 };
+
+
+export const deleteTask = async (req: Request, res: Response) : Promise<any> => {
+  const { taskId } = req.body;
+  try{
+    const deleted_task=  await prisma.task.delete({
+      where: {
+        id: Number(taskId)
+      }
+    })
+    res.status(200).json({success: true, message: `Task deleted successfully ${deleted_task.id}`});
+  }
+  catch (err: any) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ error: `An error occurred while deleting task.${err.message}` });
+  }
+}
